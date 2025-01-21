@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "279479627014",
+    "project_id": "orwim-projectmediaapp",
+    "storage_bucket": "orwim-projectmediaapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:279479627014:android:69cfde17b1a55331548287",
+        "android_client_info": {
+          "package_name": "com.example.mediaappprojectfororwim"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCr3O53cpVTmCqAvO3lkmipGy3MzPgSj6Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
