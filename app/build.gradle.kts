@@ -50,14 +50,10 @@ android {
         implementation(libs.androidx.ui.tooling.preview)
         implementation(libs.androidx.material3)
 
-        // Firebase ovisnosti (koristeći libs)
-        implementation(libs.firebase.auth.ktx)  // Firebase Authentication
-        implementation(libs.firebase.database.ktx)  // Firebase Database
+        implementation(libs.firebase.auth.ktx)
+        implementation(libs.firebase.database.ktx)
 
-        // Coil za slike
         implementation("io.coil-kt:coil-compose:2.2.2")
-
-        // Ostale ovisnosti
 
         implementation("com.google.accompanist:accompanist-systemuicontroller:0.26.2-beta")
         implementation("androidx.compose.ui:ui:1.5.0")

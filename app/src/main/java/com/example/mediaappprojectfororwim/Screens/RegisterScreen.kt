@@ -1,6 +1,5 @@
 package com.example.mediaappprojectfororwim.Screens
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
@@ -10,23 +9,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.example.mediaappprojectfororwim.ViewModels.RegisterViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(navController: NavHostController) {
-    var username by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
-    var errorMessage by remember { mutableStateOf("") }
-    var successMessage by remember { mutableStateOf("") }
-
-    val auth = FirebaseAuth.getInstance()
-    val database = FirebaseDatabase.getInstance("https://orwim-projectmediaapp-default-rtdb.europe-west1.firebasedatabase.app").reference
+    val viewModel: RegisterViewModel = viewModel()
 
     Column(
         modifier = Modifier
@@ -44,69 +34,79 @@ fun RegisterScreen(navController: NavHostController) {
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Korisničko ime
         OutlinedTextField(
-            value = username,
-            onValueChange = { username = it },
+            value = viewModel.username.value,
+            onValueChange = { viewModel.updateUsername(it) },
             label = { Text("Korisničko ime") },
             modifier = Modifier.fillMaxWidth(),
-            shape = MaterialTheme.shapes.medium
+            shape = MaterialTheme.shapes.medium,
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 1f),
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 1f),
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Email
         OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
+            value = viewModel.email.value,
+            onValueChange = { viewModel.updateEmail(it) },
             label = { Text("Email") },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             modifier = Modifier.fillMaxWidth(),
-            shape = MaterialTheme.shapes.medium
+            shape = MaterialTheme.shapes.medium,
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 1f),
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 1f),
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Lozinka
         OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
+            value = viewModel.password.value,
+            onValueChange = { viewModel.updatePassword(it) },
             label = { Text("Lozinka") },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             modifier = Modifier.fillMaxWidth(),
-            shape = MaterialTheme.shapes.medium
+            shape = MaterialTheme.shapes.medium,
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 1f),
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 1f),
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline
+            )
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Potvrda lozinke
         OutlinedTextField(
-            value = confirmPassword,
-            onValueChange = { confirmPassword = it },
+            value = viewModel.confirmPassword.value,
+            onValueChange = { viewModel.updateConfirmPassword(it) },
             label = { Text("Potvrdi lozinku") },
             visualTransformation = PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             modifier = Modifier.fillMaxWidth(),
-            shape = MaterialTheme.shapes.medium
+            shape = MaterialTheme.shapes.medium,
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 1f),
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 1f),
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline
+            )
         )
+
+
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Registracija
         Button(
-            onClick = {
-                if (validateInputs(username, email, password, confirmPassword)) {
-                    registerUser(auth, database, username, email, password,
-                        onError = { errorMessage = it },
-                        onSuccess = {
-                            successMessage = it
-                            navController.navigate("home") {
-                                popUpTo("register") { inclusive = true }
-                            }
-                        })
-                }
-            },
+            onClick = { viewModel.registerUser(navController) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 12.dp),
@@ -117,17 +117,17 @@ fun RegisterScreen(navController: NavHostController) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        if (errorMessage.isNotEmpty()) {
+        if (viewModel.errorMessage.value.isNotEmpty()) {
             Text(
-                text = errorMessage,
+                text = viewModel.errorMessage.value,
                 color = MaterialTheme.colorScheme.error,
                 style = MaterialTheme.typography.bodySmall
             )
         }
 
-        if (successMessage.isNotEmpty()) {
+        if (viewModel.successMessage.value.isNotEmpty()) {
             Text(
-                text = successMessage,
+                text = viewModel.successMessage.value,
                 color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.bodySmall
             )
@@ -144,54 +144,4 @@ fun RegisterScreen(navController: NavHostController) {
             Text("Već imate račun? Prijavite se", style = MaterialTheme.typography.bodyMedium)
         }
     }
-}
-
-private fun validateInputs(username: String, email: String, password: String, confirmPassword: String): Boolean {
-    if (username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-        return false
-    }
-    if (password != confirmPassword) {
-        return false
-    }
-    return true
-}
-
-private fun registerUser(
-    auth: FirebaseAuth,
-    database: DatabaseReference,
-    username: String,
-    email: String,
-    password: String,
-    onError: (String) -> Unit,
-    onSuccess: (String) -> Unit
-) {
-    auth.createUserWithEmailAndPassword(email, password)
-        .addOnCompleteListener { authTask ->
-            if (authTask.isSuccessful) {
-                val userId = auth.currentUser?.uid
-                if (userId == null) {
-                    onError("Neuspješan prijenos korisničkog ID-a.")
-                    return@addOnCompleteListener
-                }
-
-                // Spremi korisničke podatke u Firebase
-                val userData = mapOf(
-                    "username" to username,
-                    "email" to email,
-                    "friends" to mapOf<String, Boolean>() // Prazna mapa za prijatelje
-                )
-
-                // Spremi podatke u Firebase
-                database.child("users").child(userId).setValue(userData)
-                    .addOnCompleteListener { dbTask ->
-                        if (dbTask.isSuccessful) {
-                            onSuccess("Registracija uspješna!")
-                        } else {
-                            onError("Greška pri spremanju podataka u bazu: ${dbTask.exception?.message}")
-                        }
-                    }
-            } else {
-                onError("Registracija nije uspjela: ${authTask.exception?.message}")
-            }
-        }
 }
